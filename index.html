@@ -1,56 +1,141 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Choisissez votre localisation</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Localisation - IkoPower</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
-    #map { height: 500px; width: 100%; max-width: 800px; margin: auto; border: 1px solid #ccc; }
-    #coords { margin-top: 15px; width: 80%; padding: 8px; font-size: 1em; }
-    button { margin-top: 10px; padding: 10px 20px; font-size: 1em; cursor: pointer; }
-  </style>
-</head>
-<body>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
-  <h2>📍 Cliquez sur la carte pour choisir un emplacement</h2>
-  <div id="map"></div>
-  <input type="text" id="coords" placeholder="Latitude, Longitude" readonly />
-  <br>
-  <button onclick="copyCoords()">📋 Copier les coordonnées</button>
+    <style>
+      :root {
+        --green: #10b981;
+        --gray: #f3f4f6;
+        --dark: #111827;
+      }
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script>
-    var map = L.map('map').setView([48.8566, 2.3522], 13); // Paris par défaut
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+      body {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        background-color: var(--gray);
+        color: var(--dark);
+        text-align: center;
+        padding: 20px;
+      }
 
-    var marker;
+      header {
+        margin-bottom: 20px;
+      }
 
-    map.on('click', function(e) {
-      var lat = e.latlng.lat.toFixed(6);
-      var lng = e.latlng.lng.toFixed(6);
-      var coords = lat + ", " + lng;
-      document.getElementById('coords').value = coords;
+      h1 {
+        color: var(--green);
+        font-size: 2em;
+        margin-bottom: 10px;
+      }
 
-      if (marker) map.removeLayer(marker);
-      marker = L.marker([lat, lng]).addTo(map);
-    });
+      #map {
+        height: 60vh;
+        width: 100%;
+        max-width: 900px;
+        margin: auto;
+        border-radius: 12px;
+        border: 2px solid var(--green);
+      }
 
-    function copyCoords() {
-      var coordsInput = document.getElementById("coords");
-      coordsInput.select();
-      coordsInput.setSelectionRange(0, 99999); // Compatibilité mobile
-      document.execCommand("copy");
-      alert("📌 Coordonnées copiées : " + coordsInput.value);
-    }
-  </script>
+      #coords {
+        margin-top: 20px;
+        width: 80%;
+        max-width: 400px;
+        padding: 12px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background: white;
+      }
 
-</body>
+      button {
+        margin-top: 12px;
+        padding: 10px 25px;
+        background-color: var(--green);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #0d9b73;
+      }
+
+      footer {
+        margin-top: 30px;
+        font-size: 0.9em;
+        color: #777;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.5em;
+        }
+
+        #coords {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>📍 Sélectionnez votre localisation</h1>
+      <p>Utilisez la carte pour choisir l’emplacement précis à fournir dans le formulaire.</p>
+    </header>
+
+    <div id="map"></div>
+
+    <input type="text" id="coords" placeholder="Latitude, Longitude" readonly />
+    <br />
+    <button onclick="copyCoords()">📋 Copier les coordonnées</button>
+
+    <footer>
+      IkoPower - Localisation • Développé avec 🧡 et Leaflet + OpenStreetMap
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+      var map = L.map('map').setView([46.603354, 1.888334], 6); // France par défaut
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      var marker;
+
+      map.on('click', function (e) {
+        var lat = e.latlng.lat.toFixed(6);
+        var lng = e.latlng.lng.toFixed(6);
+        var coords = lat + ", " + lng;
+        document.getElementById('coords').value = coords;
+
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([lat, lng]).addTo(map);
+      });
+
+      function copyCoords() {
+        var input = document.getElementById('coords');
+        input.select();
+        input.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        alert("📎 Coordonnées copiées : " + input.value);
+      }
+    </script>
+  </body>
 </html>
