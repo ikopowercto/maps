@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Choisissez votre localisation</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
+    #map { height: 500px; width: 100%; max-width: 800px; margin: auto; border: 1px solid #ccc; }
+    #coords { margin-top: 15px; width: 80%; padding: 8px; font-size: 1em; }
+    button { margin-top: 10px; padding: 10px 20px; font-size: 1em; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <h2>📍 Cliquez sur la carte pour choisir un emplacement</h2>
+  <div id="map"></div>
+  <input type="text" id="coords" placeholder="Latitude, Longitude" readonly />
+  <br>
+  <button onclick="copyCoords()">📋 Copier les coordonnées</button>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    var map = L.map('map').setView([48.8566, 2.3522], 13); // Paris par défaut
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker;
+
+    map.on('click', function(e) {
+      var lat = e.latlng.lat.toFixed(6);
+      var lng = e.latlng.lng.toFixed(6);
+      var coords = lat + ", " + lng;
+      document.getElementById('coords').value = coords;
+
+      if (marker) map.removeLayer(marker);
+      marker = L.marker([lat, lng]).addTo(map);
+    });
+
+    function copyCoords() {
+      var coordsInput = document.getElementById("coords");
+      coordsInput.select();
+      coordsInput.setSelectionRange(0, 99999); // Compatibilité mobile
+      document.execCommand("copy");
+      alert("📌 Coordonnées copiées : " + coordsInput.value);
+    }
+  </script>
+
+</body>
+</html>
