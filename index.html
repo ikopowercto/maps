@@ -29,44 +29,45 @@
       background-color: var(--white);
       color: var(--text-dark);
       height: 100%;
-      overflow-x: hidden;
+      overflow: hidden; /* empêche le scroll vertical */
     }
 
     body {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      padding: 24px 16px;
+      justify-content: start;
+      height: 100dvh;
+      padding: 16px;
     }
 
     header {
       text-align: center;
-      max-width: 800px;
+      max-width: 100%;
       width: 100%;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
+      flex-shrink: 0;
     }
 
     #logo {
-      width: 180px;
-      margin-bottom: 16px;
+      width: 160px;
+      margin-bottom: 12px;
     }
 
     h1 {
-      font-size: 2.2rem;
+      font-size: 1.7rem;
       margin: 0;
     }
 
     p.description {
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: #555;
-      margin-top: 8px;
-      line-height: 1.5;
+      margin: 6px 0 16px 0;
+      padding: 0 12px;
     }
 
     #map {
-      height: 60vh; /* hauteur ajustable */
+      flex-grow: 1;
       width: 100%;
       max-width: 1000px;
       border-radius: 10px;
@@ -74,20 +75,21 @@
     }
 
     #coords {
-      margin-top: 24px;
-      padding: 12px 16px;
-      font-size: 1rem;
+      margin-top: 14px;
+      padding: 10px 14px;
+      font-size: 0.95rem;
       width: 90%;
-      max-width: 420px;
+      max-width: 400px;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
       text-align: center;
+      flex-shrink: 0;
     }
 
     #btn {
-      margin-top: 12px;
-      padding: 12px 24px;
-      font-size: 1rem;
+      margin-top: 10px;
+      padding: 10px 24px;
+      font-size: 0.95rem;
       background-color: var(--main-blue);
       color: white;
       font-weight: 500;
@@ -95,6 +97,7 @@
       border-radius: 8px;
       cursor: pointer;
       transition: background 0.2s ease;
+      flex-shrink: 0;
     }
 
     #btn:hover {
@@ -102,56 +105,61 @@
     }
 
     footer {
+      font-size: 0.8rem;
+      color: #999;
       margin-top: auto;
-      padding: 16px 0;
-      font-size: 0.9rem;
-      color: #888;
+      padding: 8px;
       text-align: center;
+      flex-shrink: 0;
     }
 
     @media (max-width: 600px) {
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
       }
 
       #logo {
-        width: 140px;
+        width: 120px;
+      }
+
+      p.description {
+        font-size: 0.85rem;
       }
 
       #coords {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Logo -->
+  <!-- Logo + Titre -->
   <header>
     <img id="logo" src="https://ikopower.fr/wp-content/uploads/2021/11/iko-power_logo_turbine-hydroelectrique.png" alt="Logo IKO Power" />
     <h1>Choisissez votre position</h1>
     <p class="description">
-      Cliquez sur la carte pour générer vos coordonnées géographiques.
-      Une fois copiées, collez-les dans le formulaire Google.
+      Cliquez sur la carte pour générer vos coordonnées géographiques.<br>
+      Une fois copiées, collez-les dans le formulaire.
     </p>
   </header>
 
   <!-- Carte -->
   <div id="map"></div>
 
-  <!-- Coordonnées GPS -->
+  <!-- Coordonnées -->
   <input type="text" id="coords" placeholder="Latitude, Longitude" readonly />
   <br />
   <button id="btn" onclick="copyCoords()">📋 Copier les coordonnées</button>
 
   <footer>
-    &copy; 2025 IKO Power • Carte interactive client • Leaflet & OpenStreetMap
+    &copy; 2025 IKO Power • Carte interactive client
   </footer>
 
-  <!-- Leaflet JS -->
+  <!-- Leaflet.js -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    const map = L.map('map').setView([46.603354, 1.888334], 6); // France
+    const map = L.map('map').setView([46.603354, 1.888334], 6);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
@@ -174,7 +182,7 @@
     function copyCoords() {
       const input = document.getElementById('coords');
       input.select();
-      input.setSelectionRange(0, 99999); // Compatibilité mobile
+      input.setSelectionRange(0, 99999);
       document.execCommand('copy');
       alert("📎 Coordonnées copiées : " + input.value);
     }
