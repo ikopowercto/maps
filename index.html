@@ -180,12 +180,24 @@
     });
 
     function copyCoords() {
-      const input = document.getElementById('coords');
-      input.select();
-      input.setSelectionRange(0, 99999);
-      document.execCommand('copy');
-      alert("📎 Coordonnées copiées : " + input.value);
-    }
+  const input = document.getElementById('coords');
+  const value = input.value;
+
+  if (!value) {
+    alert("❗ Veuillez sélectionner un point sur la carte d'abord.");
+    return;
+  }
+
+  // Méthode moderne, sans popup
+  navigator.clipboard.writeText(value)
+    .then(() => {
+      alert("✅ Coordonnées copiées avec succès !");
+    })
+    .catch(err => {
+      console.error("Erreur de copie :", err);
+      alert("❌ La copie a échoué. Essayez manuellement.");
+    });
+}
   </script>
 </body>
 </html>
