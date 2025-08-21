@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Choisissez votre position - IKO Power</title>
+  <title>Localisation - IKO Power</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Google Fonts -->
@@ -18,55 +18,74 @@
       --white: #ffffff;
     }
 
-    body {
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
       margin: 0;
+      padding: 0;
       font-family: 'Inter', sans-serif;
       background-color: var(--white);
       color: var(--text-dark);
-      padding: 30px 16px;
+      height: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
+
+    header {
       text-align: center;
+      max-width: 800px;
+      width: 100%;
+      margin-bottom: 24px;
     }
 
     #logo {
       width: 180px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     h1 {
       font-size: 2.2rem;
-      margin-bottom: 8px;
-      font-weight: 600;
+      margin: 0;
     }
 
     p.description {
       font-size: 1rem;
-      color: #666;
-      max-width: 600px;
-      margin: 0 auto 30px;
+      color: #555;
+      margin-top: 8px;
+      line-height: 1.5;
     }
 
     #map {
-      height: 60vh;
+      height: 60vh; /* hauteur ajustable */
       width: 100%;
       max-width: 1000px;
-      margin: 0 auto;
-      border: 2px solid var(--main-blue);
       border-radius: 10px;
+      border: 2px solid var(--main-blue);
     }
 
     #coords {
       margin-top: 24px;
-      padding: 12px 15px;
+      padding: 12px 16px;
       font-size: 1rem;
       width: 90%;
-      max-width: 400px;
+      max-width: 420px;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
       text-align: center;
     }
 
     #btn {
-      margin-top: 15px;
+      margin-top: 12px;
       padding: 12px 24px;
       font-size: 1rem;
       background-color: var(--main-blue);
@@ -83,27 +102,39 @@
     }
 
     footer {
-      margin-top: 40px;
+      margin-top: auto;
+      padding: 16px 0;
       font-size: 0.9rem;
       color: #888;
+      text-align: center;
     }
 
     @media (max-width: 600px) {
-      h1 { font-size: 1.5rem; }
-      #logo { width: 140px; }
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      #logo {
+        width: 140px;
+      }
+
+      #coords {
+        font-size: 0.95rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Logo officiel IKO Power -->
-  <img id="logo" src="https://ikopower.fr/wp-content/uploads/2021/11/iko-power_logo_turbine-hydroelectrique.png" alt="Logo IKO Power" />
-
-  <h1>Choisissez votre position</h1>
-  <p class="description">
-    Cliquez sur la carte pour générer vos coordonnées géographiques.
-    Une fois copiées, collez-les dans le formulaire pour finaliser votre demande.
-  </p>
+  <!-- Logo -->
+  <header>
+    <img id="logo" src="https://ikopower.fr/wp-content/uploads/2021/11/iko-power_logo_turbine-hydroelectrique.png" alt="Logo IKO Power" />
+    <h1>Choisissez votre position</h1>
+    <p class="description">
+      Cliquez sur la carte pour générer vos coordonnées géographiques.
+      Une fois copiées, collez-les dans le formulaire Google.
+    </p>
+  </header>
 
   <!-- Carte -->
   <div id="map"></div>
@@ -114,14 +145,13 @@
   <button id="btn" onclick="copyCoords()">📋 Copier les coordonnées</button>
 
   <footer>
-    &copy; 2025 IKO Power • Interface de géolocalisation client • Design conforme à ikopower.fr
+    &copy; 2025 IKO Power • Carte interactive client • Leaflet & OpenStreetMap
   </footer>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
   <script>
-    const map = L.map('map').setView([46.603354, 1.888334], 6); // Centré sur la France
+    const map = L.map('map').setView([46.603354, 1.888334], 6); // France
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
@@ -144,11 +174,10 @@
     function copyCoords() {
       const input = document.getElementById('coords');
       input.select();
-      input.setSelectionRange(0, 99999); // Pour mobile
+      input.setSelectionRange(0, 99999); // Compatibilité mobile
       document.execCommand('copy');
       alert("📎 Coordonnées copiées : " + input.value);
     }
   </script>
-
 </body>
 </html>
