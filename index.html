@@ -1,151 +1,154 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Localisation - IkoPower</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="UTF-8" />
+  <title>Choisissez votre position - IKO Power</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    :root {
+      --main-blue: #3b82f6;
+      --text-dark: #1e1e1e;
+      --gray-light: #f3f4f6;
+      --white: #ffffff;
+    }
 
-    <style>
-      :root {
-        --green: #10b981;
-        --gray: #f3f4f6;
-        --dark: #111827;
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--white);
+      color: var(--text-dark);
+      padding: 30px 16px;
+      text-align: center;
+    }
+
+    #logo {
+      width: 180px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    p.description {
+      font-size: 1rem;
+      color: #666;
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    #map {
+      height: 60vh;
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      border: 2px solid var(--main-blue);
+      border-radius: 10px;
+    }
+
+    #coords {
+      margin-top: 24px;
+      padding: 12px 15px;
+      font-size: 1rem;
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    #btn {
+      margin-top: 15px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      background-color: var(--main-blue);
+      color: white;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    #btn:hover {
+      background-color: #2563eb;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.5rem; }
+      #logo { width: 140px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo officiel IKO Power -->
+  <img id="logo" src="https://ikopower.fr/wp-content/uploads/2021/11/iko-power_logo_turbine-hydroelectrique.png" alt="Logo IKO Power" />
+
+  <h1>Choisissez votre position</h1>
+  <p class="description">
+    Cliquez sur la carte pour générer vos coordonnées géographiques.
+    Une fois copiées, collez-les dans le formulaire pour finaliser votre demande.
+  </p>
+
+  <!-- Carte -->
+  <div id="map"></div>
+
+  <!-- Coordonnées GPS -->
+  <input type="text" id="coords" placeholder="Latitude, Longitude" readonly />
+  <br />
+  <button id="btn" onclick="copyCoords()">📋 Copier les coordonnées</button>
+
+  <footer>
+    &copy; 2025 IKO Power • Interface de géolocalisation client • Design conforme à ikopower.fr
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <script>
+    const map = L.map('map').setView([46.603354, 1.888334], 6); // Centré sur la France
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    let marker;
+
+    map.on('click', function (e) {
+      const lat = e.latlng.lat.toFixed(6);
+      const lng = e.latlng.lng.toFixed(6);
+      const coords = lat + ', ' + lng;
+      document.getElementById('coords').value = coords;
+
+      if (marker) {
+        map.removeLayer(marker);
       }
+      marker = L.marker([lat, lng]).addTo(map);
+    });
 
-      body {
-        margin: 0;
-        font-family: "Inter", sans-serif;
-        background-color: var(--gray);
-        color: var(--dark);
-        text-align: center;
-        padding: 20px;
-      }
+    function copyCoords() {
+      const input = document.getElementById('coords');
+      input.select();
+      input.setSelectionRange(0, 99999); // Pour mobile
+      document.execCommand('copy');
+      alert("📎 Coordonnées copiées : " + input.value);
+    }
+  </script>
 
-      header {
-        margin-bottom: 20px;
-      }
-
-      #logo {
-        width: 180px;
-        margin-bottom: 15px;
-      }
-
-      h1 {
-        color: var(--green);
-        font-size: 2em;
-        margin-bottom: 10px;
-      }
-
-      #map {
-        height: 60vh;
-        width: 100%;
-        max-width: 900px;
-        margin: auto;
-        border-radius: 12px;
-        border: 2px solid var(--green);
-      }
-
-      #coords {
-        margin-top: 20px;
-        width: 80%;
-        max-width: 400px;
-        padding: 12px;
-        font-size: 1em;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        background: white;
-      }
-
-      button {
-        margin-top: 12px;
-        padding: 10px 25px;
-        background-color: var(--green);
-        border: none;
-        border-radius: 8px;
-        color: white;
-        font-weight: 600;
-        font-size: 1em;
-        cursor: pointer;
-        transition: background 0.3s ease;
-      }
-
-      button:hover {
-        background-color: #0d9b73;
-      }
-
-      footer {
-        margin-top: 30px;
-        font-size: 0.9em;
-        color: #777;
-      }
-
-      @media (max-width: 600px) {
-        h1 {
-          font-size: 1.5em;
-        }
-
-        #coords {
-          width: 100%;
-        }
-
-        #logo {
-          width: 140px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <img src="https://ikopower.fr/wp-content/uploads/2021/11/iko-power_logo_turbine-hydroelectrique.png" alt="Logo IkoPower" id="logo" />
-      <h1>📍 Choisissez votre emplacement</h1>
-      <p>Utilisez la carte pour sélectionner une position précise à copier dans le formulaire.</p>
-    </header>
-
-    <div id="map"></div>
-
-    <input type="text" id="coords" placeholder="Latitude, Longitude" readonly />
-    <br />
-    <button onclick="copyCoords()">📋 Copier les coordonnées</button>
-
-    <footer>
-      IkoPower • Localisation client • Propulsé par Leaflet & OpenStreetMap
-    </footer>
-
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-    <script>
-      var map = L.map("map").setView([46.603354, 1.888334], 6); // Centré sur la France
-
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap contributors",
-      }).addTo(map);
-
-      var marker;
-
-      map.on("click", function (e) {
-        var lat = e.latlng.lat.toFixed(6);
-        var lng = e.latlng.lng.toFixed(6);
-        var coords = lat + ", " + lng;
-        document.getElementById("coords").value = coords;
-
-        if (marker) map.removeLayer(marker);
-        marker = L.marker([lat, lng]).addTo(map);
-      });
-
-      function copyCoords() {
-        var input = document.getElementById("coords");
-        input.select();
-        input.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-        alert("📎 Coordonnées copiées : " + input.value);
-      }
-    </script>
-  </body>
+</body>
 </html>
